@@ -18,4 +18,8 @@ function TrackList() {
   )
 }
 
+// Here need to implement click handler to fetch context for each track
+// useState to store selected track and context, and display context below the track list when a track is clicked
+// add onClick function
+
 export default TrackList
