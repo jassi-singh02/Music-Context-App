@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
       messages: [
         {
           role: 'user',
-          content: `Give me historical and musical context for "${track}" by ${artist}. Cover the era it came from, its cultural significance, and what makes it musically interesting. Keep it to 3 short paragraphs.`
+          content: `Give me context for "${track}" by ${artist}. Use critic and online reviews of the album to describe what genre it belongs to and how it fits in, describe any background or significance to the album, and describe what makes it musically interesting. Keep it to 3 short paragraphs.`
         }
       ]
     });
