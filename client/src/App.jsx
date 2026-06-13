@@ -1,4 +1,4 @@
-import TrackList from "./Tracklist"
+import TrackList from "./albumslist"
 
 function App() {
   return (

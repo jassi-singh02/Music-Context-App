@@ -5,7 +5,7 @@ const Anthropic = require('@anthropic-ai/sdk');
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 router.get('/', async (req, res) => {
-  const { artist, track } = req.query;
+  const { artist, album } = req.query;
 
   try {
     const message = await anthropic.messages.create({
@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
       messages: [
         {
           role: 'user',
-          content: `Give me context for "${track}" by ${artist}. Use critic and online reviews of the album to describe what genre it belongs to and how it fits in, describe any background or significance to the album, and describe what makes it musically interesting. Keep it to 3 short paragraphs.`
+          content: `Give me context for "${album}" by ${artist}. Use critic and online reviews of the album to describe what genre it belongs to and how it fits in, describe any background or significance to the album, and describe what makes it musically interesting. Keep it to 3 short paragraphs.`
         }
       ]
     });
