@@ -1,0 +1,197 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background-color: #f4f4f6;
+  color: #1a1a1a;
+}
+
+.app {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.app-header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 2rem;
+}
+
+.app-subtitle {
+  margin: 0;
+  color: #666;
+}
+
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.album-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.album-cover {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.album-info {
+  padding: 0.75rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.album-name {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.album-artist {
+  margin: 0 0 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.context-button {
+  align-self: flex-start;
+  padding: 0.4rem 0.9rem;
+  border: none;
+  border-radius: 999px;
+  background-color: #1a1a1a;
+  color: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.context-button:hover {
+  background-color: #333;
+}
+
+.album-context {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #eee;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #333;
+  white-space: pre-line;
+}
+
+.albums-status {
+  text-align: center;
+  color: #666;
+  margin-top: 3rem;
+}
+
+.albums-error {
+  color: #c0392b;
+}
+
+.username-form {
+  max-width: 420px;
+  margin: 3rem auto 0;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.username-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.username-input-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.username-input {
+  flex: 1;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.95rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.username-input:focus {
+  border-color: #1a1a1a;
+}
+
+.username-submit {
+  padding: 0.6rem 1.1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #1a1a1a;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+}
+
+.username-submit:hover {
+  background-color: #333;
+}
+
+.username-error {
+  margin: 0;
+  color: #c0392b;
+  font-size: 0.85rem;
+}
+
+.user-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 100%;
+  margin-bottom: 1.5rem;
+  padding: 0.6rem 1rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.change-user-button {
+  padding: 0.35rem 0.85rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background-color: transparent;
+  color: #1a1a1a;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.change-user-button:hover {
+  background-color: #f4f4f6;
+  border-color: #ccc;
+}
