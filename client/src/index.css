@@ -166,6 +166,40 @@ body {
   font-size: 0.85rem;
 }
 
+.preset-users {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.preset-users-label {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.preset-users-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.preset-user-button {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background-color: transparent;
+  color: #1a1a1a;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.preset-user-button:hover {
+  background-color: #f4f4f6;
+  border-color: #ccc;
+}
+
 .user-bar {
   display: flex;
   align-items: center;
@@ -194,4 +228,42 @@ body {
 .change-user-button:hover {
   background-color: #f4f4f6;
   border-color: #ccc;
+}
+
+@media (max-width: 600px) {
+  .app {
+    padding: 1.25rem 0.85rem 3rem;
+  }
+
+  .app-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .app-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .album-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .username-form {
+    margin-top: 1.5rem;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .username-input-row {
+    flex-direction: column;
+  }
+
+  .username-submit {
+    width: 100%;
+  }
+
+  .user-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
 }

@@ -1,5 +1,12 @@
 import { useState } from 'react'
 
+const POPULAR_USERS = [
+  { username: 'jsingh343', label: 'jsingh343 (mine)' },
+  { username: 'rj', label: 'RJ' },
+  { username: 'BrightShadow', label: 'BrightShadow' },
+  { username: 'Babs_05', label: 'Babs_05' },
+]
+
 function UsernameForm({ onSubmit, initialValue = '' }) {
   const [value, setValue] = useState(initialValue)
   const [error, setError] = useState('')
@@ -37,6 +44,22 @@ function UsernameForm({ onSubmit, initialValue = '' }) {
         </button>
       </div>
       {error && <p className="username-error">{error}</p>}
+
+      <div className="preset-users">
+        <span className="preset-users-label">Or try a popular profile:</span>
+        <div className="preset-users-row">
+          {POPULAR_USERS.map((user) => (
+            <button
+              key={user.username}
+              type="button"
+              className="preset-user-button"
+              onClick={() => onSubmit(user.username)}
+            >
+              {user.label}
+            </button>
+          ))}
+        </div>
+      </div>
     </form>
   )
 }
