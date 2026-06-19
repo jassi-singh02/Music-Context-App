@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const API_BASE = 'http://localhost:3001/api'
+const API_BASE = '/api'
 
 function AlbumsList({ username }) {
   const [albums, setAlbums] = useState([])

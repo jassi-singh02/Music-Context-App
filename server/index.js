@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -16,6 +17,14 @@ app.use('/api/context', contextRouter);
 
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' });
+});
+
+// Serve the React client build in production
+app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
+
+// Catch-all: any request that didn't match an API route gets index.html
+app.get('/{*path}', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
 });
 
 app.listen(PORT, () => {
