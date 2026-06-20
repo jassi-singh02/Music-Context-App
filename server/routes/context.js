@@ -14,7 +14,8 @@ router.get('/', async (req, res) => {
       messages: [
         {
           role: 'user',
-          content: `Give me context for "${album}" by ${artist}. Use critic and online reviews of the album to describe what genre it belongs to and how it fits in, describe any background or significance to the album, and describe what makes it musically interesting. Keep it to 3 short paragraphs.`
+          content: `Give me context for "${album}" by ${artist}. Use critic and online reviews of the album to describe what genre it belongs to and how it fits in, describe any background or significance to the album, and describe what makes it musically interesting. Keep it to 3 short paragraphs. Do not use any markdown formatting — no
+          bold, no italics, no bullet points. Plain prose only.`
         }
       ]
     });
