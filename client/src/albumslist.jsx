@@ -59,14 +59,17 @@ function AlbumsList({ username }) {
   }
 
   return (
-    <div className="album-grid">
+    <div className="album-list">
       {albums.map((album, i) => {
         const cover = album.image?.find(img => img.size === 'extralarge')?.['#text']
         const isOpen = openAlbums.has(i)
 
         return (
           <div className="album-card" key={i}>
-            {cover && <img className="album-cover" src={cover} alt={`${album.name} cover art`} />}
+            <div className="album-left">
+              <span className="album-rank">{i + 1}</span>
+              {cover && <img className="album-cover" src={cover} alt={`${album.name} cover art`} />}
+            </div>
             <div className="album-info">
               <h3 className="album-name">{album.name}</h3>
               <p className="album-artist">{album.artist.name}</p>
@@ -76,12 +79,12 @@ function AlbumsList({ username }) {
               >
                 {isOpen ? 'Hide Context' : 'Show Context'}
               </button>
-              {isOpen && (
-                <div className="album-context">
-                  {loadingAlbums.has(i) ? 'Loading context...' : context[i]}
-                </div>
-              )}
             </div>
+            {isOpen && (
+              <div className="album-context-panel">
+                {loadingAlbums.has(i) ? 'Loading context…' : context[i]}
+              </div>
+            )}
           </div>
         )
       })}

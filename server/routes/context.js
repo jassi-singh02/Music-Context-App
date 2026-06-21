@@ -22,6 +22,7 @@ router.get('/', async (req, res) => {
 
     res.json({ context: message.content[0].text });
   } catch (error) {
+    console.error(error);   // the real message lands here
     res.status(500).json({ error: 'Failed to fetch context' });
   }
 });
