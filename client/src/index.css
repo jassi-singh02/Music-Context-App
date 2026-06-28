@@ -78,7 +78,7 @@ body {
   flex-direction: column;
   justify-content: center;
   gap: 0.25rem;
-  padding: 0.75rem 0.75rem 0.75rem 0;
+  padding: 0.75rem 0.75rem 0.75rem 0rem;
   min-width: 0;
   flex-shrink: 0;
 }
@@ -118,6 +118,41 @@ body {
 
 .context-button:hover {
   background-color: #333;
+}
+
+.period-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.period-button {
+  padding: 0.35rem 0.85rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background-color: transparent;
+  color: #1a1a1a;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.period-button:hover {
+  background-color: #f4f4f6;
+  border-color: #ccc;
+}
+
+.period-button--active {
+  background-color: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}
+
+.album-playcount {
+  margin: 0.2rem;
+  font-size: 0.8rem;
+  color: black;
 }
 
 .albums-status {

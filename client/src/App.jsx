@@ -6,6 +6,7 @@ const USERNAME_STORAGE_KEY = 'musicContext.lastfmUsername'
 
 function App() {
   const [username, setUsername] = useState(() => localStorage.getItem(USERNAME_STORAGE_KEY) || '')
+  const [period, setPeriod] = useState('7day')
 
   useEffect(() => {
     if (username) {
@@ -19,7 +20,7 @@ function App() {
     <div className="app">
       <header className="app-header">
         <h1>Music Context</h1>
-        <p className="app-subtitle">Your top albums this week — click one for AI-generated description</p>
+        <p className="app-subtitle">Your top albums — Select time period and click each one for AI-generated context</p>
       </header>
 
       {username ? (
@@ -32,7 +33,7 @@ function App() {
               Change user
             </button>
           </div>
-          <AlbumsList key={username} username={username} />
+          <AlbumsList username={username} period={period} onPeriodChange={setPeriod} />
         </>
       ) : (
         <UsernameForm onSubmit={setUsername} />

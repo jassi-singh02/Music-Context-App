@@ -2,7 +2,16 @@ import { useEffect, useState } from 'react'
 
 const API_BASE = '/api'
 
-function AlbumsList({ username }) {
+const PERIOD_OPTIONS = [
+  { value: '7day',    label: 'Last 7 days' },
+  { value: '1month',  label: 'Last month' },
+  { value: '3month',  label: 'Last 3 months' },
+  { value: '6month',  label: 'Last 6 months' },
+  { value: '12month', label: 'Last 12 months' },
+  { value: 'overall', label: 'All time' },
+]
+
+function AlbumsList({ username, period, onPeriodChange }) {
   const [albums, setAlbums] = useState([])
   const [context, setContext] = useState({})
   const [openAlbums, setOpenAlbums] = useState(new Set())
@@ -11,7 +20,13 @@ function AlbumsList({ username }) {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetch(`${API_BASE}/albums?username=${encodeURIComponent(username)}`)
+    setAlbums([])
+    setOpenAlbums(new Set())
+    setLoadingAlbums(new Set())
+    setIsLoading(true)
+    setError('')
+
+    fetch(`${API_BASE}/albums?username=${encodeURIComponent(username)}&period=${period}`)
       .then(res => res.json().then(data => ({ ok: res.ok, data })))
       .then(({ ok, data }) => {
         if (!ok) throw new Error(data.error || 'Failed to load albums')
@@ -19,28 +34,28 @@ function AlbumsList({ username }) {
       })
       .catch(err => setError(err.message))
       .finally(() => setIsLoading(false))
-  }, [username])
+  }, [username, period])
 
-  function handleClick(artist, album, index) {
-    if (openAlbums.has(index)) {
+  function handleClick(artist, albumName, albumKey) {
+    if (openAlbums.has(albumKey)) {
       const next = new Set(openAlbums)
-      next.delete(index)
+      next.delete(albumKey)
       setOpenAlbums(next)
       return
     }
 
-    setOpenAlbums(prev => new Set(prev).add(index))
+    setOpenAlbums(prev => new Set(prev).add(albumKey))
 
-    if (context[index]) return
+    if (context[albumKey]) return
 
-    setLoadingAlbums(prev => new Set(prev).add(index))
-    fetch(`${API_BASE}/context?artist=${encodeURIComponent(artist)}&album=${encodeURIComponent(album)}`)
+    setLoadingAlbums(prev => new Set(prev).add(albumKey))
+    fetch(`${API_BASE}/context?artist=${encodeURIComponent(artist)}&album=${encodeURIComponent(albumName)}`)
       .then(res => res.json())
       .then(data => {
-        setContext(prev => ({ ...prev, [index]: data.context }))
+        setContext(prev => ({ ...prev, [albumKey]: data.context }))
         setLoadingAlbums(prev => {
           const next = new Set(prev)
-          next.delete(index)
+          next.delete(albumKey)
           return next
         })
       })
@@ -59,36 +74,51 @@ function AlbumsList({ username }) {
   }
 
   return (
-    <div className="album-list">
-      {albums.map((album, i) => {
-        const cover = album.image?.find(img => img.size === 'extralarge')?.['#text']
-        const isOpen = openAlbums.has(i)
+    <>
+      <div className="period-selector">
+        {PERIOD_OPTIONS.map(opt => (
+          <button
+            key={opt.value}
+            className={`period-button${period === opt.value ? ' period-button--active' : ''}`}
+            onClick={() => onPeriodChange(opt.value)}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+      <div className="album-list">
+        {albums.map((album, i) => {
+          const cover = album.image?.find(img => img.size === 'extralarge')?.['#text']
+          const albumKey = `${album.artist.name}::${album.name}`
+          const isOpen = openAlbums.has(albumKey)
 
-        return (
-          <div className="album-card" key={i}>
-            <div className="album-left">
-              <span className="album-rank">{i + 1}</span>
-              {cover && <img className="album-cover" src={cover} alt={`${album.name} cover art`} />}
-            </div>
-            <div className="album-info">
-              <h3 className="album-name">{album.name}</h3>
-              <p className="album-artist">{album.artist.name}</p>
-              <button
-                className="context-button"
-                onClick={() => handleClick(album.artist.name, album.name, i)}
-              >
-                {isOpen ? 'Hide Context' : 'Show Context'}
-              </button>
-            </div>
-            {isOpen && (
-              <div className="album-context-panel">
-                {loadingAlbums.has(i) ? 'Loading context…' : context[i]}
+          return (
+            <div className="album-card" key={albumKey}>
+              <div className="album-left">
+                <span className="album-rank">{i + 1}</span>
+                {cover && <img className="album-cover" src={cover} alt={`${album.name} cover art`} />}
               </div>
-            )}
-          </div>
-        )
-      })}
-    </div>
+              <div className="album-info">
+                <h3 className="album-name">{album.name}</h3>
+                <p className="album-artist">{album.artist.name}</p>
+                <p className="album-playcount">{Number(album.playcount).toLocaleString()} plays</p>
+                <button
+                  className="context-button"
+                  onClick={() => handleClick(album.artist.name, album.name, albumKey)}
+                >
+                  {isOpen ? 'Hide Context' : 'Show Context'}
+                </button>
+              </div>
+              {isOpen && (
+                <div className="album-context-panel">
+                  {loadingAlbums.has(albumKey) ? 'Loading context…' : context[albumKey]}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </>
   )
 }
 
