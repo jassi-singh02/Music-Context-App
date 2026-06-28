@@ -11,9 +11,11 @@ app.use(express.json());
 
 const albumsRouter = require('./routes/albums');
 const contextRouter = require('./routes/context');
+const reportRouter = require('./routes/report');
 
 app.use('/api/albums', albumsRouter);
 app.use('/api/context', contextRouter);
+app.use('/api/report', reportRouter);
 
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' });

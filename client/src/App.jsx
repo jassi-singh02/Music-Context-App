@@ -7,6 +7,14 @@ const USERNAME_STORAGE_KEY = 'musicContext.lastfmUsername'
 function App() {
   const [username, setUsername] = useState(() => localStorage.getItem(USERNAME_STORAGE_KEY) || '')
   const [period, setPeriod] = useState('7day')
+  const [report, setReport] = useState(null)
+  const [reportLoading, setReportLoading] = useState(false)
+  const [reportError, setReportError] = useState('')
+
+  useEffect(() => {
+    setReport(null)
+    setReportError('')
+  }, [period])
 
   useEffect(() => {
     if (username) {
@@ -15,6 +23,23 @@ function App() {
       localStorage.removeItem(USERNAME_STORAGE_KEY)
     }
   }, [username])
+
+  function handleGenerateReport() {
+    setReportLoading(true)
+    setReportError('')
+    fetch('/api/report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, period }),
+    })
+      .then(res => res.json().then(data => ({ ok: res.ok, data })))
+      .then(({ ok, data }) => {
+        if (!ok) throw new Error(data.error || 'Failed to generate report')
+        setReport(data)
+      })
+      .catch(err => setReportError(err.message))
+      .finally(() => setReportLoading(false))
+  }
 
   return (
     <div className="app">
@@ -33,11 +58,23 @@ function App() {
               Change user
             </button>
           </div>
-          <AlbumsList username={username} period={period} onPeriodChange={setPeriod} />
+          <AlbumsList
+            username={username}
+            period={period}
+            onPeriodChange={setPeriod}
+            report={report}
+            reportLoading={reportLoading}
+            reportError={reportError}
+            onGenerateReport={handleGenerateReport}
+          />
         </>
       ) : (
         <UsernameForm onSubmit={setUsername} />
       )}
+      <br></br>
+      <footer>
+        <small>© {new Date().getFullYear()} Jaskaran Singh</small>
+      </footer>
     </div>
   )
 }

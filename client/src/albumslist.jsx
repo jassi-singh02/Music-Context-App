@@ -11,7 +11,7 @@ const PERIOD_OPTIONS = [
   { value: 'overall', label: 'All time' },
 ]
 
-function AlbumsList({ username, period, onPeriodChange }) {
+function AlbumsList({ username, period, onPeriodChange, report, reportLoading, reportError, onGenerateReport }) {
   const [albums, setAlbums] = useState([])
   const [context, setContext] = useState({})
   const [openAlbums, setOpenAlbums] = useState(new Set())
@@ -117,6 +117,37 @@ function AlbumsList({ username, period, onPeriodChange }) {
             </div>
           )
         })}
+      </div>
+      <div className="report-section"> <h2>Listening Report </h2>
+        {report ? (
+          <>
+            <p className="report-summary">{report.summary}</p>
+            <h2>Album Recommendations</h2>
+            <div className="report-recs">
+              {report.recommendations.map((rec, i) => (
+                <div className="report-rec" key={i}>
+                  <div className="report-rec-albums">
+                    <span className="report-rec-anchor">{rec.anchor}</span>
+                    <span className="report-rec-arrow">→</span>
+                    <span className="report-rec-suggestion">{rec.suggestion}</span>
+                  </div>
+                  <p className="report-rec-reason">{rec.reason}</p>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            {reportError && <p className="report-error">{reportError}</p>}
+            <button
+              className="report-button"
+              onClick={onGenerateReport}
+              disabled={reportLoading}
+            >
+              {reportLoading ? 'Generating report…' : 'Generate report'}
+            </button>
+          </>
+        )}
       </div>
     </>
   )
