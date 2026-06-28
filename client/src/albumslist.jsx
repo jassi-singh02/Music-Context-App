@@ -52,7 +52,7 @@ function AlbumsList({ username, period, onPeriodChange, report, reportLoading, r
     fetch(`${API_BASE}/context?artist=${encodeURIComponent(artist)}&album=${encodeURIComponent(albumName)}`)
       .then(res => res.json())
       .then(data => {
-        setContext(prev => ({ ...prev, [albumKey]: data.context }))
+        setContext(prev => ({ ...prev, [albumKey]: data }))
         setLoadingAlbums(prev => {
           const next = new Set(prev)
           next.delete(albumKey)
@@ -111,7 +111,19 @@ function AlbumsList({ username, period, onPeriodChange, report, reportLoading, r
               </div>
               {isOpen && (
                 <div className="album-context-panel">
-                  {loadingAlbums.has(albumKey) ? 'Loading context…' : context[albumKey]}
+                  {loadingAlbums.has(albumKey) ? 'Loading context…' : (
+                    context[albumKey] && (
+                      <div className="context-body"> <h4>Context:</h4>
+                        <p className="context-prose">{context[albumKey].context}</p>
+                        {context[albumKey].recommendation && (
+                          <div className="context-rec"> <h4>Recommendation:</h4>
+                            <p className="context-rec-suggestion">{context[albumKey].recommendation.suggestion}</p>
+                            <p className="context-rec-reason">{context[albumKey].recommendation.reason}</p>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  )}
                 </div>
               )}
             </div>
@@ -122,15 +134,14 @@ function AlbumsList({ username, period, onPeriodChange, report, reportLoading, r
         {report ? (
           <>
             <p className="report-summary">{report.summary}</p>
+            <p className="report-through-line">
+              <span className="through-line-label">Music Through-line:</span> {report.throughLine}
+            </p>
             <h2>Album Recommendations</h2>
             <div className="report-recs">
               {report.recommendations.map((rec, i) => (
                 <div className="report-rec" key={i}>
-                  <div className="report-rec-albums">
-                    <span className="report-rec-anchor">{rec.anchor}</span>
-                    <span className="report-rec-arrow">→</span>
-                    <span className="report-rec-suggestion">{rec.suggestion}</span>
-                  </div>
+                  <p className="report-rec-suggestion">{rec.suggestion}</p>
                   <p className="report-rec-reason">{rec.reason}</p>
                 </div>
               ))}

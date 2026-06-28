@@ -53,8 +53,11 @@ router.post('/', async (req, res) => {
     `- Interpret the shape of the play counts as listening behavior (one dominant obsession vs. evenly spread vs. a long tail), not just the raw numbers.\n` +
     `- You may include one non-obvious but factual observation connecting two or more albums (a shared producer, scene, or pivotal moment) — but only if you are confident it is true. If not, omit it.\n` +
     `Ground every claim in facts about the albums and artists, never in guesses about the listener's mood or emotional state.\n` +
-    `Then write 5 \`recommendations\`, one per album as anchor: because they played X, suggest a different album Y, with a one-sentence reason. Return ONLY valid JSON, no markdown fences, no preamble, exactly:\n` +
-    `{"summary": "...", "recommendations": [{"anchor":"Album by Artist","suggestion":"Album by Artist","reason":"..."}]}`;
+    `Then set \`throughLine\`: a short phrase (3–8 words) naming the thread connecting this period's listening, consistent with the through-line in your summary.\n` +
+    `Then write 2–3 \`recommendations\`: albums NOT already in the list above that extend that through-line, each with a one-sentence reason tying it to the thread.\n` +
+    `If there is no coherent thread, set \`throughLine\` to a brief honest phrase naming the eclecticism, and anchor the recommendations on the 1–2 most-played albums instead.\n` +
+    `Return ONLY valid JSON, no markdown fences, no preamble, exactly:\n` +
+    `{"summary": "...", "throughLine": "...", "recommendations": [{"suggestion":"Album by Artist","reason":"..."}]}`;
     
   let message;
   try {

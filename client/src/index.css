@@ -204,25 +204,21 @@ body {
   padding: 0.75rem 1rem;
 }
 
-.report-rec-albums {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.35rem;
+.report-through-line {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  color: black;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
-.report-rec-anchor {
+.through-line-label {
   font-weight: 600;
-  font-size: 0.875rem;
-}
-
-.report-rec-arrow {
-  color: #aaa;
-  font-size: 0.875rem;
+  color: #1a1a1a;
 }
 
 .report-rec-suggestion {
+  margin: 0 0 0.25rem;
   font-weight: 600;
   font-size: 0.875rem;
 }
@@ -232,6 +228,32 @@ body {
   font-size: 0.825rem;
   color: #666;
   line-height: 1.5;
+}
+
+.context-body {
+  width: 100%;
+}
+
+.context-prose {
+  margin: 0 0 0.75rem;
+}
+
+.context-rec {
+  padding-top: 0.75rem;
+  border-top: 1px solid #eee;
+}
+
+.context-rec-suggestion {
+  margin: 0 0 0.25rem;
+  font-weight: 600;
+  font-size: 0.825rem;
+}
+
+.context-rec-reason {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #555;
+  line-height: 1.45;
 }
 
 .albums-status {
