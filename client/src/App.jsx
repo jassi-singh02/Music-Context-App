@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import AlbumsList from "./albumslist"
-import UsernameForm from "./UsernameForm"
+import AlbumsList from './albumslist'
+import UsernameForm from './UsernameForm'
 
 const USERNAME_STORAGE_KEY = 'musicContext.lastfmUsername'
 
@@ -12,17 +12,28 @@ function App() {
   const [reportError, setReportError] = useState('')
 
   useEffect(() => {
-    setReport(null)
-    setReportError('')
-  }, [period])
-
-  useEffect(() => {
     if (username) {
       localStorage.setItem(USERNAME_STORAGE_KEY, username)
     } else {
       localStorage.removeItem(USERNAME_STORAGE_KEY)
     }
   }, [username])
+
+  // A report belongs to one user and one period; clear it when either changes.
+  function clearReport() {
+    setReport(null)
+    setReportError('')
+  }
+
+  function handleUsernameChange(next) {
+    clearReport()
+    setUsername(next)
+  }
+
+  function handlePeriodChange(next) {
+    clearReport()
+    setPeriod(next)
+  }
 
   function handleGenerateReport() {
     setReportLoading(true)
@@ -43,37 +54,41 @@ function App() {
 
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>Music Context</h1>
-        <p className="app-subtitle">Your top albums — Select time period and click each one for AI-generated context</p>
-      </header>
-
-      {username ? (
-        <>
-          <div className="user-bar">
-            <span className="user-bar-label">
-              Showing data for <strong>{username}</strong>
-            </span>
-            <button className="change-user-button" onClick={() => setUsername('')}>
+      <header className="masthead">
+        <h1 className="masthead-title">Music Context</h1>
+        <p className="masthead-tagline">For each album, click to see AI generated context</p>
+        {username && (
+          <p className="masthead-user">
+            Listening data for <strong>{username}</strong>
+            <span className="masthead-user-sep" aria-hidden="true"></span>
+            <button type="button" className="link-button" onClick={() => handleUsernameChange('')}>
               Change user
             </button>
-          </div>
+          </p>
+        )}
+      </header>
+
+      <main>
+        {username ? (
           <AlbumsList
+            key={`${username}::${period}`}
             username={username}
             period={period}
-            onPeriodChange={setPeriod}
+            onPeriodChange={handlePeriodChange}
             report={report}
             reportLoading={reportLoading}
             reportError={reportError}
             onGenerateReport={handleGenerateReport}
           />
-        </>
-      ) : (
-        <UsernameForm onSubmit={setUsername} />
-      )}
-      <br></br>
-      <footer>
-        <small>© {new Date().getFullYear()} Jaskaran Singh</small>
+        ) : (
+          <UsernameForm onSubmit={handleUsernameChange} />
+        )}
+      </main>
+
+      <footer className="colophon">
+        <small>
+          © {new Date().getFullYear()} Jaskaran Singh · Listening data from Last.fm · Context written by Claude Sonnet
+        </small>
       </footer>
     </div>
   )

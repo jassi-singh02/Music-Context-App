@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-const POPULAR_USERS = [
-  { username: 'jsingh343', label: 'jsingh343 (mine - Jaskaran!)' },
+const SAMPLE_USERS = [
+  { username: 'jsingh343', label: 'jsingh343 · the author’s library' },
 ]
 
 function UsernameForm({ onSubmit, initialValue = '' }) {
@@ -22,10 +22,13 @@ function UsernameForm({ onSubmit, initialValue = '' }) {
   }
 
   return (
-    <form className="username-form" onSubmit={handleSubmit}>
+    <form className="username-form" onSubmit={handleSubmit} noValidate>
       <label htmlFor="lastfm-username" className="username-label">
-        Enter your Last.fm username
+        Your Last.fm username
       </label>
+      <p className="username-hint">
+        Any public profile works. No sign-in needed.
+      </p>
       <div className="username-input-row">
         <input
           id="lastfm-username"
@@ -34,28 +37,35 @@ function UsernameForm({ onSubmit, initialValue = '' }) {
           placeholder="e.g. rj"
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          autoComplete="username"
+          autoCapitalize="none"
+          spellCheck="false"
+          aria-invalid={error ? 'true' : undefined}
+          aria-describedby={error ? 'lastfm-username-error' : undefined}
           autoFocus
         />
-        <button type="submit" className="username-submit">
-          View My Music
+        <button type="submit" className="button button--primary">
+          View my albums
         </button>
       </div>
-      {error && <p className="username-error">{error}</p>}
+      {error && (
+        <p id="lastfm-username-error" className="status status--error" role="alert">
+          {error}
+        </p>
+      )}
 
-      <div className="preset-users">
-        <span className="preset-users-label">Or try my profile:</span>
-        <div className="preset-users-row">
-          {POPULAR_USERS.map((user) => (
-            <button
-              key={user.username}
-              type="button"
-              className="preset-user-button"
-              onClick={() => onSubmit(user.username)}
-            >
-              {user.label}
-            </button>
-          ))}
-        </div>
+      <div className="sample-users">
+        <span className="sample-users-label">Or browse a sample library:</span>
+        {SAMPLE_USERS.map((user) => (
+          <button
+            key={user.username}
+            type="button"
+            className="link-button"
+            onClick={() => onSubmit(user.username)}
+          >
+            {user.label}
+          </button>
+        ))}
       </div>
     </form>
   )
