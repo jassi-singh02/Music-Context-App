@@ -16,7 +16,7 @@ The AI layer is built around factual grounding. The prompts ask for concrete det
 
 React 19 + Vite · Express 5 · Last.fm API · Anthropic Claude (Sonnet 4.6) · Railway
 
-There's no database yet, the app is stateless and reads public Last.fm data. The Anthropic key lives server-side only; the client never sees it.
+There's no database yet, the app is stateless and reads public Last.fm data. Album context is cached in memory on the server for the life of the process, so repeat expands of the same album don't hit Claude again. The Anthropic key lives server-side only; the client never sees it.
 
 ## Running locally
 
@@ -34,6 +34,6 @@ Then `npm install && npm run dev` in `server/` (:3001) and `client/` (:5173). Vi
 I am currently working on
 
 - Resolving AI recommendations against the Deezer API so suggestions point at real releases rather than model recall
-- Caching context responses — every expand is currently a fresh Claude call
+- Persisting the context cache (it's in-memory today and resets on every deploy)
 - Creating algorithmic recommendation layer using Last.fm's similarity graph, with the LLM used only for explanation
 - A database to store reports, contexts, and recommendations

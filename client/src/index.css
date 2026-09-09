@@ -1,287 +1,321 @@
-* {
+/* ------------------------------------------------------------------
+   Design tokens
+   Baize: deep green field, mahogany for emphasis, gold for links.
+   Grotesque interface layer over serif editorial content.
+   ------------------------------------------------------------------ */
+
+:root {
+  color-scheme: dark;
+
+  --font-ui: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+
+  /* Palette */
+  --bg: #1E2C24;
+  --surface: #26352B;
+  --ink: #E6DCC6;
+  --muted: #93A088;
+  --line: #33463A;
+  --mahogany: #B5452F;
+  --gold: #C79A4E;
+
+  /* Derived */
+  --gold-hover: color-mix(in srgb, var(--gold) 80%, var(--ink));
+  --mahogany-soft: color-mix(in srgb, var(--mahogany) 30%, var(--bg));
+  --sunken: color-mix(in srgb, var(--line) 60%, var(--bg));
+
+  /* Layout and rhythm */
+  --page-width: 1100px;
+  --page-pad: clamp(16px, 4vw, 48px);
+  --measure: 62ch;
+  --cover-size: clamp(56px, 12vw, 112px);
+  --rank-width: clamp(1.5rem, 4vw, 2.75rem);
+  --row-gap: clamp(0.75rem, 2vw, 1.25rem);
+  --tap: 44px;
+
+  --radius-sm: 2px;
+  --radius: 4px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --duration: 180ms;
+}
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  background-color: #f4f4f6;
-  color: #1a1a1a;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink);
+  background-color: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+blockquote,
+p {
+  margin: 0;
+}
+
+ol,
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button,
+input {
+  font-family: var(--font-ui);
+  color: inherit;
+}
+
+::selection {
+  background: var(--mahogany-soft);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
 }
 
 .app {
-  max-width: 960px;
+  max-width: var(--page-width);
   margin: 0 auto;
-  padding: 2rem 1rem 4rem;
+  padding: clamp(1.5rem, 4vw, 3rem) var(--page-pad) 4rem;
 }
 
-.app-header {
-  text-align: center;
-  margin-bottom: 2rem;
+/* ------------------------------------------------------------------
+   Shared primitives
+   ------------------------------------------------------------------ */
+
+/* Section labels: interface layer, sentence case, small and steady. */
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
 }
 
-.app-header h1 {
-  margin: 0 0 0.25rem;
-  font-size: 2rem;
+.section-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3.2vw, 2rem);
+  line-height: 1.15;
 }
 
-.app-subtitle {
-  margin: 0;
-  color: #666;
-}
-
-.album-list {
+.section-head {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 0.25rem;
 }
 
-.album-card {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  overflow: hidden;
-}
-
-.album-left {
-  display: flex;
-  flex-direction: row;
+.button {
+  display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  flex-shrink: 0;
-}
-
-.album-rank {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #aaa;
-  width: 1.5rem;
-  text-align: right;
-  flex-shrink: 0;
-}
-
-.album-cover {
-  width: 72px;
-  height: 72px;
-  object-fit: cover;
-  display: block;
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-
-.album-info {
-  display: flex;
-  flex-direction: column;
   justify-content: center;
-  gap: 0.25rem;
-  padding: 0.75rem 0.75rem 0.75rem 0rem;
-  min-width: 0;
-  flex-shrink: 0;
-}
-
-.album-context-panel {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: #333;
-}
-
-.album-name {
-  margin: 0;
-  font-size: 1rem;
-}
-
-.album-artist {
-  margin: 0 0 0.5rem;
-  color: #666;
+  gap: 0.5rem;
+  min-height: var(--tap);
+  padding: 0.6rem 1.2rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font-family: var(--font-ui);
+  font-weight: 500;
   font-size: 0.9rem;
-}
-
-.context-button {
-  align-self: flex-start;
-  padding: 0.4rem 0.9rem;
-  border: none;
-  border-radius: 999px;
-  background-color: #1a1a1a;
-  color: #fff;
-  font-size: 0.85rem;
+  line-height: 1;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  white-space: nowrap;
+  transition: background-color var(--duration) var(--ease),
+              color var(--duration) var(--ease);
 }
 
-.context-button:hover {
-  background-color: #333;
+.button--primary {
+  background: var(--gold);
+  color: var(--bg);
 }
 
-.period-selector {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-bottom: 1rem;
+.button--primary:hover:not(:disabled) {
+  background: var(--gold-hover);
 }
 
-.period-button {
-  padding: 0.35rem 0.85rem;
-  border: 1px solid #ddd;
-  border-radius: 999px;
-  background-color: transparent;
-  color: #1a1a1a;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-
-.period-button:hover {
-  background-color: #f4f4f6;
-  border-color: #ccc;
-}
-
-.period-button--active {
-  background-color: #1a1a1a;
-  color: #fff;
-  border-color: #1a1a1a;
-}
-
-.album-playcount {
-  margin: 0.2rem;
-  font-size: 0.8rem;
-  color: black;
-}
-
-.report-section {
-  margin-top: 1.5rem;
-}
-
-.report-button {
-  padding: 0.5rem 1.2rem;
-  border: none;
-  border-radius: 999px;
-  background-color: #1a1a1a;
-  color: #fff;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.report-button:hover {
-  background-color: #333;
-}
-
-.report-button:disabled {
-  background-color: #999;
+.button:disabled {
+  opacity: 0.55;
   cursor: default;
 }
 
-.report-error {
-  margin: 0 0 0.75rem;
-  color: #c0392b;
-  font-size: 0.85rem;
-}
-
-.report-summary {
-  margin: 0 0 1rem;
-  font-size: 0.925rem;
-  line-height: 1.6;
-  color: #333;
-}
-
-.report-recs {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.report-rec {
-  background: #f9f9f9;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-}
-
-.report-through-line {
-  margin: 0 0 1rem;
-  font-size: 1.25rem;
-  color: black;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-
-.through-line-label {
-  font-weight: 600;
-  color: #1a1a1a;
-}
-
-.report-rec-suggestion {
-  margin: 0 0 0.25rem;
-  font-weight: 600;
+.link-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-ui);
   font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gold);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--gold) 40%, transparent);
+  text-underline-offset: 0.2em;
+  transition: color var(--duration) var(--ease),
+              text-decoration-color var(--duration) var(--ease);
 }
 
-.report-rec-reason {
-  margin: 0;
-  font-size: 0.825rem;
-  color: #666;
-  line-height: 1.5;
+.link-button:hover {
+  color: var(--gold-hover);
+  text-decoration-color: currentColor;
 }
 
-.context-body {
-  width: 100%;
-}
-
-.context-prose {
-  margin: 0 0 0.75rem;
-}
-
-.context-rec {
-  padding-top: 0.75rem;
-  border-top: 1px solid #eee;
-}
-
-.context-rec-suggestion {
-  margin: 0 0 0.25rem;
-  font-weight: 600;
-  font-size: 0.825rem;
-}
-
-.context-rec-reason {
-  margin: 0;
-  font-size: 0.8rem;
-  color: #555;
-  line-height: 1.45;
-}
-
-.albums-status {
+.status {
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  color: var(--muted);
+  padding: 2.5rem 0;
   text-align: center;
-  color: #666;
-  margin-top: 3rem;
 }
 
-.albums-error {
-  color: #c0392b;
+.status--error {
+  color: var(--mahogany);
 }
+
+/* Skeletons */
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--sunken);
+  border-radius: var(--radius-sm);
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(230, 220, 198, 0.08), transparent);
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  to { transform: translateX(100%); }
+}
+
+.skeleton-line {
+  display: block;
+  height: 0.8em;
+  width: 70%;
+}
+
+.skeleton-line--title {
+  height: 1.05em;
+  width: 55%;
+}
+
+.skeleton-line--short {
+  width: 40%;
+}
+
+.skeleton-line--tiny {
+  width: 20%;
+  height: 0.65em;
+}
+
+/* ------------------------------------------------------------------
+   Masthead
+   ------------------------------------------------------------------ */
+
+.masthead {
+  padding-bottom: clamp(1.25rem, 3vw, 1.75rem);
+  margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
+  border-bottom: 1px solid var(--line);
+}
+
+.masthead-title {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: clamp(2rem, 7vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.masthead-tagline {
+  margin-top: 0.6rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  color: var(--muted);
+}
+
+.masthead-user {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 1rem;
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.masthead-user strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.masthead-user-sep {
+  display: none;
+}
+
+/* ------------------------------------------------------------------
+   Username form
+   ------------------------------------------------------------------ */
 
 .username-form {
-  max-width: 420px;
-  margin: 3rem auto 0;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  max-width: 480px;
+  margin: 1rem 0 3rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
 }
 
 .username-label {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #1a1a1a;
+  font-family: var(--font-serif);
+  font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.username-hint {
+  margin-top: 0.35rem;
+  margin-bottom: 1.25rem;
+  font-family: var(--font-ui);
+  color: var(--muted);
+  font-size: 0.875rem;
 }
 
 .username-input-row {
@@ -291,153 +325,439 @@ body {
 
 .username-input {
   flex: 1;
+  min-width: 0;
+  min-height: var(--tap);
   padding: 0.6rem 0.85rem;
-  font-size: 0.95rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  outline: none;
-  transition: border-color 0.15s ease;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color var(--duration) var(--ease);
+}
+
+.username-input::placeholder {
+  color: var(--muted);
 }
 
 .username-input:focus {
-  border-color: #1a1a1a;
+  outline: none;
+  border-color: var(--gold);
 }
 
-.username-submit {
-  padding: 0.6rem 1.1rem;
-  border: none;
-  border-radius: 8px;
-  background-color: #1a1a1a;
-  color: #fff;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background-color 0.15s ease;
+.username-input[aria-invalid='true'] {
+  border-color: var(--mahogany);
 }
 
-.username-submit:hover {
-  background-color: #333;
-}
-
-.username-error {
-  margin: 0;
-  color: #c0392b;
+.username-form .status {
+  padding: 0.6rem 0 0;
+  text-align: left;
   font-size: 0.85rem;
 }
 
-.preset-users {
-  margin-top: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.preset-users-label {
-  font-size: 0.85rem;
-  color: #666;
-}
-
-.preset-users-row {
+.sample-users {
+  margin-top: 1rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.preset-user-button {
-  padding: 0.4rem 0.85rem;
-  border: 1px solid #ddd;
-  border-radius: 999px;
-  background-color: transparent;
-  color: #1a1a1a;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-
-.preset-user-button:hover {
-  background-color: #f4f4f6;
-  border-color: #ccc;
-}
-
-.user-bar {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  max-width: 100%;
-  margin-bottom: 1.5rem;
-  padding: 0.6rem 1rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  font-size: 0.9rem;
-  color: #333;
+  gap: 0 0.6rem;
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
 }
 
-.change-user-button {
-  padding: 0.35rem 0.85rem;
-  border: 1px solid #ddd;
-  border-radius: 999px;
-  background-color: transparent;
-  color: #1a1a1a;
+.sample-users-label {
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------
+   Period tabs
+   ------------------------------------------------------------------ */
+
+.period-selector {
+  display: flex;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.period-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0.4rem 0.6rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--muted);
   font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  white-space: nowrap;
+  transition: color var(--duration) var(--ease);
 }
 
-.change-user-button:hover {
-  background-color: #f4f4f6;
-  border-color: #ccc;
+.period-button::after {
+  content: '';
+  position: absolute;
+  left: 0.6rem;
+  right: 0.6rem;
+  bottom: 0;
+  height: 2px;
+  background: var(--mahogany);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration) var(--ease);
+}
+
+.period-button:hover {
+  color: var(--ink);
+}
+
+.period-button--active {
+  color: var(--ink);
+}
+
+.period-button--active::after {
+  transform: scaleX(1);
+}
+
+/* ------------------------------------------------------------------
+   Album chart
+   ------------------------------------------------------------------ */
+
+.album-card {
+  border-bottom: 1px solid var(--line);
+  transition: background-color var(--duration) var(--ease);
+}
+
+.album-card--open {
+  background: var(--surface);
+  box-shadow: inset 2px 0 0 var(--mahogany);
+}
+
+.album-row {
+  display: grid;
+  grid-template-columns: var(--rank-width) var(--cover-size) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--row-gap);
+  padding: clamp(0.85rem, 2vw, 1.1rem) 0.5rem clamp(0.85rem, 2vw, 1.1rem) 0;
+}
+
+.album-rank {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  text-align: right;
+  padding-right: 0.25rem;
+}
+
+.album-cover {
+  width: var(--cover-size);
+  height: var(--cover-size);
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius-sm);
+  background: var(--sunken);
+  outline: 1px solid rgba(230, 220, 198, 0.08);
+  outline-offset: -1px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 20px -10px rgba(0, 0, 0, 0.6);
+}
+
+.album-cover--empty {
+  outline-color: transparent;
+  box-shadow: none;
+  border: 1px solid var(--line);
+}
+
+.album-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.album-name {
+  font-family: var(--font-serif);
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  font-weight: 500;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.album-artist {
+  font-family: var(--font-serif);
+  font-size: clamp(0.9rem, 1.6vw, 1rem);
+  color: var(--muted);
+}
+
+.album-playcount {
+  margin-top: 0.2rem;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.context-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: var(--tap);
+  padding: 0 0.1rem;
+  border: 0;
+  background: none;
+  font-family: var(--font-ui);
+  color: var(--gold);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--gold) 40%, transparent);
+  text-underline-offset: 0.2em;
+  transition: color var(--duration) var(--ease),
+              text-decoration-color var(--duration) var(--ease);
+}
+
+.context-toggle:hover {
+  color: var(--gold-hover);
+  text-decoration-color: currentColor;
+}
+
+/* No arrows or chevrons on link text. */
+.context-toggle-chevron {
+  display: none;
+}
+
+/* Notes panel, under the row, aligned with the album info column */
+
+.album-notes {
+  padding: 0.25rem 1.5rem 1.5rem calc(var(--rank-width) + var(--cover-size) + var(--row-gap) * 2);
+  animation: rise var(--duration) var(--ease);
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.notes-prose {
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
+  line-height: 1.6;
+  max-width: var(--measure);
+  color: var(--ink);
+}
+
+.notes-rec {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  max-width: var(--measure);
+}
+
+.rec-title {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.rec-reason {
+  margin-top: 0.25rem;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.notes-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  max-width: var(--measure);
+  padding-top: 0.5rem;
+}
+
+.notes-skeleton .skeleton-line {
+  width: 100%;
+}
+
+.notes-skeleton .skeleton-line--short {
+  width: 45%;
+}
+
+.album-notes .status {
+  padding: 0.5rem 0 0;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.album-list--skeleton .album-info {
+  gap: 0.45rem;
+}
+
+/* ------------------------------------------------------------------
+   Listening report
+   ------------------------------------------------------------------ */
+
+.report {
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.report-empty {
+  padding: 1.5rem 0 0;
+  max-width: var(--measure);
+}
+
+.report-blurb {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--muted);
+  margin-bottom: 1.25rem;
+}
+
+.report-empty .status {
+  padding: 0 0 0.75rem;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.report-body {
+  padding-top: 1.5rem;
+  max-width: var(--measure);
+}
+
+.through-line {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  line-height: 1.2;
+  color: var(--mahogany);
+  margin-bottom: 1.25rem;
+}
+
+.report-summary {
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.report-recs {
+  counter-reset: rec;
+}
+
+.report-rec {
+  counter-increment: rec;
+  position: relative;
+  padding: 1rem 0 1rem 2.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.report-rec:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.report-rec::before {
+  content: counter(rec, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 1.2rem;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------
+   Footer
+   ------------------------------------------------------------------ */
+
+.colophon {
+  margin-top: 4rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-ui);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+/* ------------------------------------------------------------------
+   Responsive
+   Desktop is the default above. Side-by-side blocks stack below 768px;
+   tab and row behaviour changes at 600px.
+   ------------------------------------------------------------------ */
+
+@media (max-width: 768px) {
+  .section-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .album-notes {
+    padding: 0.25rem 0.5rem 1.25rem 0.75rem;
+  }
 }
 
 @media (max-width: 600px) {
-  .app {
-    padding: 1.25rem 0.85rem 3rem;
+  /* Single scrollable row of tabs, snapping, scrollbar hidden. */
+  .period-selector {
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin: 0 calc(-1 * var(--page-pad));
+    padding: 0 var(--page-pad);
   }
 
-  .app-header h1 {
-    font-size: 1.6rem;
+  .period-selector::-webkit-scrollbar {
+    display: none;
   }
 
-  .app-subtitle {
-    font-size: 0.9rem;
+  .period-button {
+    scroll-snap-align: start;
+    flex-shrink: 0;
   }
 
-  .album-card {
-    flex-wrap: wrap;
+  /* Right-edge fade so it's clear more tabs sit off-screen. */
+  .section-head::after {
+    content: '';
+    position: absolute;
+    right: calc(-1 * var(--page-pad));
+    bottom: 0.85rem;
+    width: 3rem;
+    height: var(--tap);
+    pointer-events: none;
+    background: linear-gradient(to right, transparent, var(--bg) 75%);
   }
 
-  .album-cover {
-    width: 56px;
-    height: 56px;
-  }
-
-  .album-context-panel {
-    flex-basis: 100%;
-    padding: 0.75rem;
-  }
-
-  .album-info {
-    min-width: 0;
-    flex: 1;
-  }
-
-  .username-form {
-    margin-top: 1.5rem;
-    padding: 1.5rem 1.25rem;
+  .album-row {
+    padding-left: 0.5rem;
+    padding-right: 0;
   }
 
   .username-input-row {
     flex-direction: column;
   }
+}
 
-  .username-submit {
-    width: 100%;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
   }
 
-  .user-bar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.6rem;
+  .period-selector {
+    scroll-behavior: auto;
   }
 }
